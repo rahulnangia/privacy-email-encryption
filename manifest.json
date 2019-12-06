@@ -1,0 +1,26 @@
+{
+  "manifest_version": 2,
+  "name": "Privacy Extension",
+  "version": "0.1",
+  "background": {
+
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "jquery-2.3.1.min.js",
+        "crypt.js",
+        "utils.js"
+      ],
+    "run_at":"document_end"
+    }
+  ],
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["activeTab"]
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+  <link rel="stylesheet" type='text/css' href="styles.css">
+  <script src="crypt.js"></script>
+  <script src="utils.js"></script>
+  <script src="popup.js"></script>
+
+</head>
+
+<body>
+
+  <div class="content">
+    <button class="primary" id="encode-btn">Encode Message</button>
+    <button class="primary" id="decode-btn">Decode Message</button>
+  </div>
+
+  <!-- Encode Modal -->
+  <div id="encode-modal" class="modal">
+    <div>
+      <span class="close-btn" id="close-encode-btn">&times;</span>
+      <h1>Encode the message</h1>
+      <form>
+        <div>
+          <label for="message">Message:</label>
+          <textarea class="message" name="message"></textarea>
+        </div>
+        <div>
+          <label for="password">Password:</label>
+          <input class="password" type="password" />
+        </div>
+        <button id="m-encode-btn" class="submit">Encode</button>
+        <div class="msg">
+          <span class="success success-msg"></span>
+          <span class="error error-msg"></span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Decode Modal -->
+  <div id="decode-modal" class="modal">
+    <div>
+      <span class="close-btn" id="close-decode-btn">&times;</span>
+      <h1>Decode the message</h1>
+      <form>
+        <div>
+          <label for="message">Message:</label>
+          <textarea class="message" name="message"></textarea>
+        </div>
+        <div>
+          <label for="password">Password:</label>
+          <input class="password" type="password" />
+        </div>
+        <button id="m-decode-btn" class="submit">Decode</button>
+        <div class="msg">
+          <span class="success success-msg"></span>
+          <span id="decrypted-msg"></span>
+          <span class="error error-msg"></span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

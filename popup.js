@@ -1,0 +1,96 @@
+const MODE = 'AES-GCM';
+const LENGTH = 256;
+const IV_LENGTH = 12;
+const DELIMITER = "__#__";
+const ADDITIONAL_TEXT = "\n--\nCopy message till the line before '--' and Click here to decrypt the message: http://localhost:3000/";
+
+document.addEventListener('DOMContentLoaded', function() {
+  const encodeBtn = document.getElementById("encode-btn");
+  const decodeBtn = document.getElementById("decode-btn");
+  const encodeModal = document.getElementById("encode-modal");
+  const decodeModal = document.getElementById("decode-modal");
+  const mEncodeBtn = document.getElementById("m-encode-btn");
+  const mDecodeBtn = document.getElementById("m-decode-btn");
+  const closeEncodeBtn = document.getElementById("close-encode-btn");
+  const closeDecodeBtn = document.getElementById("close-decode-btn");
+  const message = document.getElementsByClassName('message');
+  const password = document.getElementsByClassName('password');
+  const successMsg = document.getElementsByClassName('success-msg');
+  const errorMsg = document.getElementsByClassName('error-msg');
+  const decryptedMessage = document.getElementById("decrypted-msg");
+  let test = ""
+
+// modal related
+  encodeBtn.onclick = function() {
+    encodeModal.style.display = "block";
+    resetModal();
+  }
+  decodeBtn.onclick = function() {
+    decodeModal.style.display = "block";
+    resetModal();
+  }
+  window.onclick = function(event) {
+    if (event.target == encodeModal) {
+      encodeModal.style.display = "none";
+    }
+    if (event.target == decodeModal) {
+      decodeModal.style.display = "none";
+    }
+  }
+  closeEncodeBtn.onclick = function() {
+    encodeModal.style.display = "none";
+  }
+  closeDecodeBtn.onclick = function() {
+    decodeModal.style.display = "none";
+  }
+
+  function resetModal() {
+    resetValues(0);
+    resetValues(1);
+  }
+
+  function resetValues(index) {
+    message[index].value = "";
+    password[index].value = "";
+    successMsg[index].innerHTML = "";
+    errorMsg[index].innerHTML = "";
+    decryptedMessage.innerHTML = "";
+  }
+
+  // main
+  mEncodeBtn.onclick = function(e) {
+    e.preventDefault();
+    crypt(0, encrypt, MODE, LENGTH, IV_LENGTH);
+  }
+  mDecodeBtn.onclick = function(e) {
+    e.preventDefault();
+    crypt(1, decrypt, MODE, LENGTH, IV_LENGTH);
+  }
+
+  const crypt = (index, func) => {
+    let msg = message[index].value;
+    if(func.name==='decrypt') {
+      msg = decodeURI(msg)
+      // strToAb
+      msg = {
+        cipherText: StringToArrayBuffer(msg.split(DELIMITER)[0]),
+        iv: StringToArrayBuffer(msg.split(DELIMITER)[1])
+      }
+    }
+    func(msg, password[index].value, MODE, LENGTH, IV_LENGTH).then(res => {
+      if (func.name === 'encrypt') {
+        // abToStr
+        copyToClipboard(encodeURI(ArrayBufferToString(res.cipherText) + DELIMITER + ArrayBufferToString(res.iv)) + ADDITIONAL_TEXT);
+        successMsg[index].innerHTML = "Copied the encrypted message to clipboard!";
+      } else {
+        successMsg[index].innerHTML = "Decrypted message:";
+        decryptedMessage.innerHTML = res;
+      }
+      errorMsg[index].innerHTML = "";
+    },
+    function(err) {
+      successMsg[index].innerHTML = "";
+      errorMsg[index].innerHTML = err.message ? err.message : "Someting went wrong!";
+    });
+  }
+});
